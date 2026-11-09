@@ -1,0 +1,21 @@
+=== Host: lsa-guilherme | 08/11/2026 21:38 ===
+--- Usuarios ---
+[OK]   asouza uid=2001 home=/home/soc/asouza shell=/bin/bash
+[OK]   blima uid=2002 home=/home/soc/blima shell=/bin/bash
+[OK]   cmendes uid=2103 home=/srv/redteam/cmendes shell=/usr/bin/zsh
+[OK]   drocha uid=2004 home=/home/admin/drocha shell=/bin/bash
+[OK]   eprado uid=2005 home=/home/auditoria/eprado shell=/bin/sh
+[OK]   fnunes uid=2006 home=/home/fnunes shell=/bin/bash
+[OK]   svc-backup uid=111 home=/var/lib/svc-backup shell=/usr/sbin/nologin
+[OK]   svc-monitor uid=996 home=/opt/monitor shell=/bin/false
+--- Contas de sistema ---
+[OK]   svc-backup uid=111 status=L
+[OK]   svc-monitor uid=996 status=L
+--- Grupos ---
+[OK]   soc gid=5001 membros: asouza blima
+[OK]   redteam gid=5002 membros: cmendes fnunes
+[OK]   auditoria gid=5003 membros: drocha eprado
+[OK]   bkpadm gid=5004 membros: drocha svc-backup
+[OK]   monitoramento gid=5005 membros: blima svc-monitor
+[OK]   orion gid=5006 membros: asouza blima cmendes drocha eprado fnunes
+[OK]   administrador do grupo soc: blima

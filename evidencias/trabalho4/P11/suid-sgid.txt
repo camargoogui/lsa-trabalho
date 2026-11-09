@@ -1,0 +1,67 @@
+INVENTARIO DE BINARIOS SUID E SGID - lsa-guilherme - 08/11/2026 22:12
+Comando: find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec ls -l {} \;
+
+-rwsr-xr-x 1 root root 394144 Aug 13 16:29 /opt/VBoxGuestAdditions-7.2.16/bin/VBoxDRMClient
+-rwxr-sr-x 1 root shadow 113848 Apr 19  2025 /usr/bin/chage
+-rwsr-xr-x 1 root root 70888 Apr 19  2025 /usr/bin/chfn
+-rwsr-xr-x 1 root root 52936 Apr 19  2025 /usr/bin/chsh
+-rwxr-sr-x 1 root crontab 51936 Jun 13  2025 /usr/bin/crontab
+-rwxr-sr-x 1 root mail 23104 Dec 31  2024 /usr/bin/dotlockfile
+-rwxr-sr-x 1 root shadow 31256 Apr 19  2025 /usr/bin/expiry
+-rwsr-xr-x 1 root root 39224 Jul 16  2025 /usr/bin/fusermount3
+-rwsr-xr-x 1 root root 88568 Apr 19  2025 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 72072 Jul 31 12:34 /usr/bin/mount
+-rwsr-xr-x 1 root root 18816 Jul 31 12:34 /usr/bin/newgrp
+-rwsr-xr-x 1 root root 166848 Oct  1 18:06 /usr/bin/ntfs-3g
+-rwsr-xr-x 1 root root 118168 Apr 19  2025 /usr/bin/passwd
+-rwsr-xr-x 1 root root 30952 Jan 17  2025 /usr/bin/pkexec
+-rwxr-sr-x 1 root _ssh 420224 May  6  2026 /usr/bin/ssh-agent
+-rwsr-xr-x 1 root root 84360 Jul 31 12:34 /usr/bin/su
+-rwsr-xr-x 1 root root 306456 Apr 11  2026 /usr/bin/sudo
+-rwsr-xr-x 1 root root 55688 Jul 31 12:34 /usr/bin/umount
+-rwsr-xr-- 1 root messagebus 51272 Mar  8  2025 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwxr-sr-x 1 root mail 22784 Nov  5  2025 /usr/libexec/camel-lock-helper-1.2
+-rwsr-xr-x 1 root root 498240 May  6  2026 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-x 1 root root 18744 Jan 17  2025 /usr/lib/polkit-1/polkit-agent-helper-1
+-rwxr-sr-x 1 root utmp 14416 Nov 12  2024 /usr/lib/x86_64-linux-gnu/utempter/utempter
+-rwsr-sr-x 1 root root 14672 Sep  5 02:52 /usr/lib/xorg/Xorg.wrap
+-rwsr-xr-- 1 root dip 428424 Feb 17  2025 /usr/sbin/pppd
+-rwxr-sr-x 1 root shadow 43256 Jun 29  2025 /usr/sbin/unix_chkpwd
+
+Total SUID: 18 | Total SGID: 9
+
+ANALISE DE 3 BINARIOS
+1) /usr/bin/passwd (SUID root): o usuario comum precisa trocar a propria senha, mas o hash fica em
+   /etc/shadow, que so o root le e escreve (640 root:shadow). O SUID faz o passwd rodar com
+   privilegio de root; o proprio programa limita o usuario a alterar apenas a sua senha.
+2) /usr/bin/su (SUID root): para trocar de identidade o processo precisa chamar setuid() para outro
+   usuario, o que exige privilegio de root. O su autentica pela senha (PAM) antes de fazer isso.
+3) /usr/bin/sudo (SUID root): executa comandos como outro usuario conforme as regras do /etc/sudoers.
+   Sem o SUID nao conseguiria elevar o privilegio; com ele, aplica as regras e registra em log.
+Risco: qualquer falha nesses programas vira escalacao de privilegio, por isso o inventario deve ser
+revisado periodicamente e nenhum SUID novo deve existir fora dos pacotes do sistema.
+
+DEMONSTRACAO CONTROLADA (copia em /usr/local/bin, removida no final)
+
+[1mroot@lsa-guilherme:/srv/arquivos$ echo 'salario e dados pessoais da asouza' > individual/asouza/confidencial.txt; chown asouza:asouza individual/asouza/confidencial.txt; chmod 600 individual/asouza/confidencial.txt[0m
+   => PERMITIDO (codigo 0)
+
+[1mfnunes@lsa-guilherme:/srv/arquivos$ cat individual/asouza/confidencial.txt[0m
+cat: individual/asouza/confidencial.txt: Permission denied
+   => NEGADO (codigo 1)
+
+[1mroot@lsa-guilherme:/srv/arquivos$ cp /usr/bin/cat /usr/local/bin/cat-suid && chmod u+s /usr/local/bin/cat-suid && ls -l /usr/local/bin/cat-suid[0m
+-rwsr-xr-x 1 root root 47592 Nov  8 22:12 /usr/local/bin/cat-suid
+   => PERMITIDO (codigo 0)
+
+[1mfnunes@lsa-guilherme:/srv/arquivos$ /usr/local/bin/cat-suid individual/asouza/confidencial.txt[0m
+salario e dados pessoais da asouza
+   => PERMITIDO (codigo 0)
+
+[1mroot@lsa-guilherme:/srv/arquivos$ rm -f /usr/local/bin/cat-suid individual/asouza/confidencial.txt && test ! -e /usr/local/bin/cat-suid && echo 'copia SUID removida de /usr/local/bin'[0m
+copia SUID removida de /usr/local/bin
+   => PERMITIDO (codigo 0)
+
+[1mroot@lsa-guilherme:/srv/arquivos$ echo "SUID restantes em /usr/local: $(find /usr/local -perm -4000 | wc -l)"[0m
+SUID restantes em /usr/local: 0
+   => PERMITIDO (codigo 0)

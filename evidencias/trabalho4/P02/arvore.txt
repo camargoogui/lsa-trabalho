@@ -1,0 +1,32 @@
+[drwxr-xr-x root     root    ]  /srv/arquivos
+├── [drwxrws--- root     bkpadm  ]  backup
+├── [drwxr-x--- root     orion   ]  empresa
+│   ├── [drwxrws--- root     soc     ]  comunicados
+│   ├── [drwxrwx--T root     orion   ]  ouvidoria
+│   └── [drwxrws--- root     orion   ]  politicas
+│       └── [-rw-r----- root     orion   ]  politica-seguranca.txt
+├── [drwxr-x--- root     orion   ]  grupos
+│   ├── [drwxrws--- root     auditoria]  auditoria
+│   ├── [drwxrws--- root     bkpadm  ]  bkpadm
+│   ├── [drwxrws--- root     monitoramento]  monitoramento
+│   │   └── [drwxrws--- root     monitoramento]  metricas
+│   │       └── [-rw-rw---- root     monitoramento]  alertas.log
+│   ├── [drwxrws--- root     redteam ]  redteam
+│   │   └── [drwxrws--- root     redteam ]  ferramentas
+│   │       ├── [-rwxrwx--- cmendes  redteam ]  coleta-info.sh
+│   │       └── [-rwxrwx--- cmendes  redteam ]  varredura-portas.sh
+│   └── [drwxrws--- root     soc     ]  soc
+│       └── [drwxrws--- root     soc     ]  incidentes
+├── [drwxr-x--x root     root    ]  individual
+│   ├── [drwxr-x--- asouza   asouza  ]  asouza
+│   ├── [drwxr-x--- blima    blima   ]  blima
+│   ├── [drwxr-x--- cmendes  cmendes ]  cmendes
+│   ├── [drwxr-x--- drocha   drocha  ]  drocha
+│   ├── [drwxr-x--- eprado   eprado  ]  eprado
+│   └── [drwxr-x--- fnunes   fnunes  ]  fnunes
+├── [-rw-r--r-- root     root    ]  LEIA-ME.txt
+└── [drwxr-xr-x root     root    ]  publico
+    ├── [drwxrwxr-x root     root    ]  downloads
+    └── [drwxrwxrwt root     root    ]  troca
+
+25 directories, 5 files
